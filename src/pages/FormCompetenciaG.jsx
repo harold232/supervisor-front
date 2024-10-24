@@ -6,18 +6,22 @@ const FormCompetenciaG = () => {
   const [codigo, setCodigo] = useState("");
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [tipo, setTipo] = useState("");
-  const [nivel, setNivel] = useState("");
+  const [planid, setPlanid] = useState("");
+  const [institucionid, setInstitucionid] = useState("");
+  const [departamentoid, setDepartamentoid] = useState("");
+  const [planes, setPlanes] = useState([]);
+  const [instituciones, setInstituciones] = useState([]);
+  const [departamentos, setDepartamentos] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ codigo, nombre, descripcion, tipo, nivel });
+    console.log({ codigo, nombre, descripcion, planid, institucionid, departamentoid });
     fetch('http://localhost:8080/api/competencia/general', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ codigo, nombre, descripcion, tipo, nivel }),
+      body: JSON.stringify({ codigo, nombre, descripcion, planid, institucionid, departamentoid }),
     })
       .then(response => response.json())
       .then(data => {
@@ -25,8 +29,9 @@ const FormCompetenciaG = () => {
         setCodigo("");
         setNombre("");
         setDescripcion("");
-        setTipo("");
-        setNivel("");
+        setPlanid("");
+        setInstitucionid("");
+        setDepartamentoid("");
       })
       .catch(error => {
         console.error('Error:', error);
@@ -37,8 +42,9 @@ const FormCompetenciaG = () => {
     setCodigo("");
     setNombre("");
     setDescripcion("");
-    setTipo("");
-    setNivel("");
+    setPlanid("");
+    setInstitucionid("");
+    setDepartamentoid("");
   };
 
   return (
@@ -72,17 +78,25 @@ const FormCompetenciaG = () => {
               required
             />
             <TextField
-              label="Tipo"
-              value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
+              label="Plan"
+              value={planid}
+              onChange={(e) => setPlanid(e.target.value)}
               margin="normal"
               sx={{ background: "#EFF1F6" }}
               required
             />
             <TextField
-              label="Nivel"
-              value={nivel}
-              onChange={(e) => setNivel(e.target.value)}
+              label="Institucion"
+              value={institucionid}
+              onChange={(e) => setInstitucionid(e.target.value)}
+              margin="normal"
+              sx={{ background: "#EFF1F6" }}
+              required
+            />
+            <TextField
+              label="Departamento"
+              value={departamentoid}
+              onChange={(e) => setDepartamentoid(e.target.value)}
               margin="normal"
               sx={{ background: "#EFF1F6" }}
               required
