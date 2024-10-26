@@ -3,21 +3,36 @@ import { Container, FormGroup, TextField, Select, MenuItem, InputLabel, FormCont
 import Buttons from "../views/Buttons";
 
 const FormCompetenciaE = () => {
-
   const [codigo, setCodigo] = useState("");
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [tipo, setTipo] = useState("");
-  const [nivel, setNivel] = useState("");
-  const [competenciaGeneralId, setCompetenciaGeneral] = useState("");
-  const [competenciasGenerales, setCompetenciasGenerales] = useState([]);
+  const [planid, setPlanid] = useState("");
+  const [institucionid, setInstitucionid] = useState("");
+  const [departamentoid, setDepartamentoid] = useState("");
+  const [planes, setPlanes] = useState([]);
+  const [instituciones, setInstituciones] = useState([]);
+  const [departamentos, setDepartamentos] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/competencia/competencias-generales')
+    // Fetch planes data
+    fetch('http://localhost:8080/api/plan-estudios/all')
       .then(response => response.json())
-      .then(data => setCompetenciasGenerales(data))
-      .catch(error => console.error('Error al obtener competencias generales:', error));
+      .then(data => setPlanes(data))
+      .catch(error => console.error('Error fetching planes:', error));
+
+    // Fetch instituciones data
+    fetch('http://localhost:8080/api/institucion/instituciones-educativas')
+      .then(response => response.json())
+      .then(data => setInstituciones(data))
+      .catch(error => console.error('Error fetching instituciones:', error));
+
+    // Fetch departamentos data
+    fetch('http://localhost:8080/api/departamento/all')
+      .then(response => response.json())
+      .then(data => setDepartamentos(data))
+      .catch(error => console.error('Error fetching departamentos:', error));
   }, []);
+
 
   const handleSubmit = () => {
     console.log({ codigo, nombre, descripcion, tipo, nivel, competenciaGeneralId });
@@ -35,9 +50,9 @@ const FormCompetenciaE = () => {
         setCodigo("");
         setNombre("");
         setDescripcion("");
-        setTipo("");
-        setNivel("");
-        setCompetenciaGeneral("");
+        setPlanid("");
+        setInstitucionid("");
+        setDepartamentoid("");
       })
       .catch(error => {
         console.error('Error:', error);
@@ -48,9 +63,9 @@ const FormCompetenciaE = () => {
     setCodigo("");
     setNombre("");
     setDescripcion("");
-    setTipo("");
-    setNivel("");
-    setCompetenciaGeneral("");
+    setPlanid("");
+    setInstitucionid("");
+    setDepartamentoid("");
   }
 
   return (
@@ -82,35 +97,45 @@ const FormCompetenciaE = () => {
               sx={{ background: "#EFF1F6" }}
               required
             />
-            <TextField
-              label="Tipo"
-              value={tipo}
-              onChange={(e) => setTipo(e.target.value)}
-              margin="normal"
-              sx={{ background: "#EFF1F6" }}
-              required
-            />
-            <TextField
-              label="Nivel"
-              value={nivel}
-              onChange={(e) => setNivel(e.target.value)}
-              margin="normal"
-              sx={{ background: "#EFF1F6" }}
-              required
-            />
             <FormControl margin="normal" sx={{ background: "#EFF1F6" }} required>
-                <InputLabel>Competencia General</InputLabel>
-                <Select
-                  value={competenciaGeneralId}
-                  onChange={(e) => setCompetenciaGeneral(e.target.value)}
-                >
-                  {competenciasGenerales.map((competencia) => (
-                    <MenuItem key={competencia.id} value={competencia.id}>
-                      {competencia.codigo} - {competencia.nombre}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <InputLabel>Plan</InputLabel>
+              <Select
+                value={planid}
+                onChange={(e) => setPlanid(e.target.value)}
+              >
+                {planes.map((plan) => (
+                  <MenuItem key={plan.id} value={plan.id}>
+                    {plan.codigo} - {plan.descripcion}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl margin="normal" sx={{ background: "#EFF1F6" }} required>
+              <InputLabel>Institucion</InputLabel>
+              <Select
+                value={institucionid}
+                onChange={(e) => setInstitucionid(e.target.value)}
+              >
+                {instituciones.map((institucion) => (
+                  <MenuItem key={institucion.id} value={institucion.id}>
+                    {institucion.codigo} - {institucion.nombreCorto}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl margin="normal" sx={{ background: "#EFF1F6" }} required>
+              <InputLabel>Departamento</InputLabel>
+              <Select
+                value={departamentoid}
+                onChange={(e) => setDepartamentoid(e.target.value)}
+              >
+                {departamentos.map((departamento) => (
+                  <MenuItem key={departamento.id} value={departamento.id}>
+                    {departamento.codigo} - {departamento.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </FormGroup>
         </div>
       </Container>

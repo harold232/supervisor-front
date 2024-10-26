@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Container, FormGroup, TextField } from "@mui/material"
+import { useEffect, useState } from "react";
+import { Container, FormGroup, TextField, Select, MenuItem, InputLabel, FormControl } from "@mui/material"
 import Buttons from "../views/Buttons";
 
 const FormCompetenciaG = () => {
@@ -12,6 +12,26 @@ const FormCompetenciaG = () => {
   const [planes, setPlanes] = useState([]);
   const [instituciones, setInstituciones] = useState([]);
   const [departamentos, setDepartamentos] = useState([]);
+
+  useEffect(() => {
+    // Fetch planes data
+    fetch('http://localhost:8080/api/plan-estudios/all')
+      .then(response => response.json())
+      .then(data => setPlanes(data))
+      .catch(error => console.error('Error fetching planes:', error));
+
+    // Fetch instituciones data
+    fetch('http://localhost:8080/api/institucion/instituciones-educativas')
+      .then(response => response.json())
+      .then(data => setInstituciones(data))
+      .catch(error => console.error('Error fetching instituciones:', error));
+
+    // Fetch departamentos data
+    fetch('http://localhost:8080/api/departamento/all')
+      .then(response => response.json())
+      .then(data => setDepartamentos(data))
+      .catch(error => console.error('Error fetching departamentos:', error));
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -77,30 +97,45 @@ const FormCompetenciaG = () => {
               sx={{ background: "#EFF1F6" }}
               required
             />
-            <TextField
-              label="Plan"
-              value={planid}
-              onChange={(e) => setPlanid(e.target.value)}
-              margin="normal"
-              sx={{ background: "#EFF1F6" }}
-              required
-            />
-            <TextField
-              label="Institucion"
-              value={institucionid}
-              onChange={(e) => setInstitucionid(e.target.value)}
-              margin="normal"
-              sx={{ background: "#EFF1F6" }}
-              required
-            />
-            <TextField
-              label="Departamento"
-              value={departamentoid}
-              onChange={(e) => setDepartamentoid(e.target.value)}
-              margin="normal"
-              sx={{ background: "#EFF1F6" }}
-              required
-            />
+            <FormControl margin="normal" sx={{ background: "#EFF1F6" }} required>
+              <InputLabel>Plan</InputLabel>
+              <Select
+                value={planid}
+                onChange={(e) => setPlanid(e.target.value)}
+              >
+                {planes.map((plan) => (
+                  <MenuItem key={plan.id} value={plan.id}>
+                    {plan.codigo} - {plan.descripcion}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl margin="normal" sx={{ background: "#EFF1F6" }} required>
+              <InputLabel>Institucion</InputLabel>
+              <Select
+                value={institucionid}
+                onChange={(e) => setInstitucionid(e.target.value)}
+              >
+                {instituciones.map((institucion) => (
+                  <MenuItem key={institucion.id} value={institucion.id}>
+                    {institucion.codigo} - {institucion.nombreCorto}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl margin="normal" sx={{ background: "#EFF1F6" }} required>
+              <InputLabel>Departamento</InputLabel>
+              <Select
+                value={departamentoid}
+                onChange={(e) => setDepartamentoid(e.target.value)}
+              >
+                {departamentos.map((departamento) => (
+                  <MenuItem key={departamento.id} value={departamento.id}>
+                    {departamento.codigo} - {departamento.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </FormGroup>
         </div>
       </Container>
