@@ -16,15 +16,15 @@ const TablaCompetenciaEspecificas = () => {
         <Container sx={{ borderRadius: 5, pb: 2, textAlign: "center", background: "#E1E2E7" }}>
             <h2>Competencias Especificas</h2>
             <TableContainer component={Paper}>
-                <Table>
+            <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell>Código</TableCell>
                             <TableCell>Nombre</TableCell>
                             <TableCell>Descripción</TableCell>
-                            <TableCell>Tipo</TableCell>
-                            <TableCell>Nivel</TableCell>
-                            <TableCell>Competencia general</TableCell>
+                            <TableCell>Plan</TableCell>
+                            <TableCell>Institucion</TableCell>
+                            <TableCell>Departamento</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -33,9 +33,9 @@ const TablaCompetenciaEspecificas = () => {
                                 <TableCell>{competencia.codigo}</TableCell>
                                 <TableCell>{competencia.nombre}</TableCell>
                                 <TableCell>{competencia.descripcion}</TableCell>
-                                <TableCell>{competencia.tipo}</TableCell>
-                                <TableCell>{competencia.nivel}</TableCell>
-                                <TableCell>{competencia.competenciaGeneralId}</TableCell>
+                                <TableCell>{competencia.planId}</TableCell>
+                                <TableCell>{competencia.institucionId}</TableCell>
+                                <TableCell>{competencia.departamentoId}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

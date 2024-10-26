@@ -11,7 +11,7 @@ const TablaCompetenciaGenerales = () => {
             .catch(error => console.error('Error al obtener competencias generales:', error));
     }, []);
 
-
+    
     return (
         <Container sx={{ borderRadius: 5, pb: 2, textAlign: "center", background: "#E1E2E7" }}>
             <h2>Competencias Generales</h2>
@@ -22,8 +22,9 @@ const TablaCompetenciaGenerales = () => {
                             <TableCell>Código</TableCell>
                             <TableCell>Nombre</TableCell>
                             <TableCell>Descripción</TableCell>
-                            <TableCell>Tipo</TableCell>
-                            <TableCell>Nivel</TableCell>
+                            <TableCell>Plan</TableCell>
+                            <TableCell>Institucion</TableCell>
+                            <TableCell>Departamento</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -32,8 +33,9 @@ const TablaCompetenciaGenerales = () => {
                                 <TableCell>{competencia.codigo}</TableCell>
                                 <TableCell>{competencia.nombre}</TableCell>
                                 <TableCell>{competencia.descripcion}</TableCell>
-                                <TableCell>{competencia.tipo}</TableCell>
-                                <TableCell>{competencia.nivel}</TableCell>
+                                <TableCell>{competencia.planId}</TableCell>
+                                <TableCell>{competencia.institucionId}</TableCell>
+                                <TableCell>{competencia.departamentoId}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
