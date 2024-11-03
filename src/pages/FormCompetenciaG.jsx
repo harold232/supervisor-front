@@ -21,7 +21,7 @@ const FormCompetenciaG = () => {
       .catch(error => console.error('Error fetching planes:', error));
 
     // Fetch instituciones data
-    fetch('http://localhost:8080/api/institucion/instituciones-educativas')
+    fetch('http://localhost:8080/api/institucion/all')
       .then(response => response.json())
       .then(data => setInstituciones(data))
       .catch(error => console.error('Error fetching instituciones:', error));

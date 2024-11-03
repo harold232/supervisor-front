@@ -26,7 +26,7 @@ const MainScreen = () => {
                 variant="contained"
                 color="#EFF1F6"
                 onClick={handleNavigateToG}
-                sx={{ mr: 2, background: '#205274' }}
+                sx={{ mr: 2, background: '#205274', color: '#fff' }}
             >
                 Crear Competencia General
             </Button>
@@ -34,7 +34,7 @@ const MainScreen = () => {
                 variant="contained"
                 color="#EFF1F6"
                 onClick={handleNavigateToE}
-                sx={{ mr: 2, background: '#205274'}}
+                sx={{ mr: 2, background: '#205274', color: '#fff'}}
             >
                 Crear Competencia Especifica
             </Button>
@@ -43,7 +43,7 @@ const MainScreen = () => {
                 variant="contained"
                 color="#EFF1F6"
                 onClick={handleNavigateToTablaG}
-                sx={{ mr: 2, background: '#205274'}}
+                sx={{ mr: 2, background: '#205274', color: '#fff' }}
             >
                 Ver Competencias Generales
             </Button>
@@ -52,7 +52,7 @@ const MainScreen = () => {
                 variant="contained"
                 color="#EFF1F6"
                 onClick={handleNavigateToTablaE}
-                sx={{ mr: 2, background: '#205274'}}
+                sx={{ mr: 2, background: '#205274', color: '#fff' }}
             >
                 Ver Competencias Especificas
             </Button>
