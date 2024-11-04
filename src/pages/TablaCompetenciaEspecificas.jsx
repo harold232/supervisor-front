@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableSortLabel } from "@mui/material";
+import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableSortLabel, Button, ThemeProvider } from "@mui/material";
+import theme from '../theme/theme';
+import { fetchCompetenciasEspecificas, deleteCompetencia, editCompetencia } from '../actions/competenciaActions';
 
 const TablaCompetenciaEspecificas = () => {
     const [competenciasEspecificas, setCompetenciasEspecificas] = useState([]);
@@ -7,16 +9,36 @@ const TablaCompetenciaEspecificas = () => {
     const [orderBy, setOrderBy] = useState('nombre');
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/competencia/competencias-especificas')
-            .then(response => response.json())
-            .then(data => setCompetenciasEspecificas(data))
-            .catch(error => console.error('Error al obtener competencias especificas:', error));
+        fetchCompetenciasEspecificas()
+            .then(setCompetenciasEspecificas)
+            .catch(console.error);
     }, []);
 
     const handleRequestSort = (property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
+    };
+
+    const handleDelete = (id) => {
+        deleteCompetencia(id)
+            .then(() => {
+                setCompetenciasEspecificas(competenciasEspecificas.filter(competencia => competencia.id !== id));
+            })
+            .catch(console.error);
+    };
+
+    const handleEdit = (id) => {
+        const updatedCompetencia = prompt("Ingrese el nuevo nombre de la competencia:");
+        if (updatedCompetencia) {
+            editCompetencia(id, updatedCompetencia)
+                .then(() => {
+                    setCompetenciasEspecificas(competenciasEspecificas.map(competencia => 
+                        competencia.id === id ? { ...competencia, nombre: updatedCompetencia } : competencia
+                    ));
+                })
+                .catch(console.error);
+        }
     };
 
     const sortedCompetencias = competenciasEspecificas.sort((a, b) => {
@@ -28,6 +50,7 @@ const TablaCompetenciaEspecificas = () => {
     });
 
     return (
+        <ThemeProvider theme={theme}>
         <Container sx={{ borderRadius: 5, pb: 2, textAlign: "center", background: "#E1E2E7" }}>
             <h2>Competencias Especificas</h2>
             <TableContainer component={Paper}>
@@ -48,6 +71,7 @@ const TablaCompetenciaEspecificas = () => {
                             <TableCell>Plan</TableCell>
                             <TableCell>Institucion</TableCell>
                             <TableCell>Departamento</TableCell>
+                            <TableCell>Acción</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -59,12 +83,21 @@ const TablaCompetenciaEspecificas = () => {
                                 <TableCell>{competencia.planNombre}</TableCell>
                                 <TableCell>{competencia.institucionNombre}</TableCell>
                                 <TableCell>{competencia.departamentoNombre}</TableCell>
+                                <TableCell>
+                                    <Button variant="contained" color="secondary" onClick={() => handleDelete(competencia.id)}>
+                                        Eliminar
+                                    </Button>
+                                    <Button variant="contained" color="primary" onClick={() => handleEdit(competencia.id)} style={{ marginLeft: '10px' }}>
+                                        Editar
+                                    </Button>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
         </Container>
+        </ThemeProvider>
     );
 };
 export default TablaCompetenciaEspecificas;

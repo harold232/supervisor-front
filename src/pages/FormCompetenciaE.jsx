@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { Container, FormGroup, TextField, Select, MenuItem, InputLabel, FormControl } from "@mui/material"
 import Buttons from "../views/Buttons";
+import { fetchPlanes } from "../actions/planActions";
+import { fetchInstituciones } from "../actions/institucionActions";
+import { fetchDepartamentos } from "../actions/departamentoActions";
+import { createCompetenciaEspecifica } from "../actions/competenciaActions";
 
 const FormCompetenciaE = () => {
   const [codigo, setCodigo] = useState("");
@@ -14,37 +18,16 @@ const FormCompetenciaE = () => {
   const [departamentos, setDepartamentos] = useState([]);
 
   useEffect(() => {
-    // Fetch planes data
-    fetch('http://localhost:8080/api/plan-estudios/all')
-      .then(response => response.json())
-      .then(data => setPlanes(data))
-      .catch(error => console.error('Error fetching planes:', error));
-
-    // Fetch instituciones data
-    fetch('http://localhost:8080/api/institucion/all')
-      .then(response => response.json())
-      .then(data => setInstituciones(data))
-      .catch(error => console.error('Error fetching instituciones:', error));
-
-    // Fetch departamentos data
-    fetch('http://localhost:8080/api/departamento/all')
-      .then(response => response.json())
-      .then(data => setDepartamentos(data))
-      .catch(error => console.error('Error fetching departamentos:', error));
+    fetchPlanes().then(setPlanes).catch(console.error);
+    fetchInstituciones().then(setInstituciones).catch(console.error);
+    fetchDepartamentos().then(setDepartamentos).catch(console.error);
   }, []);
 
 
   const handleSubmit = () => {
-    console.log({ codigo, nombre, descripcion, tipo, nivel, competenciaGeneralId });
-
-    fetch('http://localhost:8080/api/competencia/especifica', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ codigo, nombre, descripcion, tipo, nivel, competenciaGeneralId }),
-    })
-      .then(response => response.json())
+    console.log({ codigo, nombre, descripcion, planid, institucionid, departamentoid });
+    const competencia = { codigo, nombre, descripcion, planid, institucionid, departamentoid };
+    createCompetenciaEspecifica(competencia)
       .then(data => {
         console.log('Éxito:', data);
         setCodigo("");
@@ -54,9 +37,7 @@ const FormCompetenciaE = () => {
         setInstitucionid("");
         setDepartamentoid("");
       })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+      .catch(console.error);
   };
 
   const handleCancel = () => {
