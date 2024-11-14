@@ -1,58 +1,28 @@
-import { useEffect, useReducer } from "react";
+import { useEffect } from "react";
 import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableSortLabel, Button, ThemeProvider } from "@mui/material";
 import theme from '../theme/theme';
 import { fetchCompetenciasGenerales, deleteCompetencia, editCompetencia } from '../actions/competenciaActions';
-
-const initialState = {
-  competenciasGenerales: [],
-  order: 'asc',
-  orderBy: 'nombre'
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "LOAD_DATA":
-      return { ...state, competenciasGenerales: action.payload };
-    case "SET_ORDER":
-      return {
-        ...state,
-        order: action.payload.order,
-        orderBy: action.payload.orderBy
-      };
-    case "DELETE_COMPETENCIA":
-      return {
-        ...state,
-        competenciasGenerales: state.competenciasGenerales.filter(c => c.id !== action.payload)
-      };
-    case "EDIT_COMPETENCIA":
-      return {
-        ...state,
-        competenciasGenerales: state.competenciasGenerales.map(c =>
-          c.id === action.payload.id ? { ...c, nombre: action.payload.updatedNombre } : c
-        )
-      };
-    default:
-      return state;
-  }
-};
+import { useDispatch, useSelector } from 'react-redux';
+import { loadData, setOrder, deleteCompetencia as deleteCompetenciaAction, editCompetencia as editCompetenciaAction } from '../slices/tablaCompetenciaGeneralesSlice';
 
 const TablaCompetenciaGenerales = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const dispatch = useDispatch();
+  const state = useSelector((state) => state.tablaCompetenciaGenerales);
 
   useEffect(() => {
     fetchCompetenciasGenerales()
-      .then(data => dispatch({ type: "LOAD_DATA", payload: data }))
+      .then(data => dispatch(loadData(data)))
       .catch(console.error);
-  }, []);
+  }, [dispatch]);
 
   const handleRequestSort = (property) => {
     const isAsc = state.orderBy === property && state.order === 'asc';
-    dispatch({ type: "SET_ORDER", payload: { order: isAsc ? 'desc' : 'asc', orderBy: property } });
+    dispatch(setOrder({ order: isAsc ? 'desc' : 'asc', orderBy: property }));
   };
 
   const handleDelete = (id) => {
     deleteCompetencia(id)
-      .then(() => dispatch({ type: "DELETE_COMPETENCIA", payload: id }))
+      .then(() => dispatch(deleteCompetenciaAction(id)))
       .catch(console.error);
   };
 
@@ -60,12 +30,12 @@ const TablaCompetenciaGenerales = () => {
     const updatedCompetencia = prompt("Ingrese el nuevo nombre de la competencia:");
     if (updatedCompetencia) {
       editCompetencia(id, updatedCompetencia)
-        .then(() => dispatch({ type: "EDIT_COMPETENCIA", payload: { id, updatedNombre: updatedCompetencia } }))
+        .then(() => dispatch(editCompetenciaAction({ id, updatedNombre: updatedCompetencia })))
         .catch(console.error);
     }
   };
 
-  const sortedCompetencias = state.competenciasGenerales.sort((a, b) => {
+  const sortedCompetencias = [...state.competenciasGenerales].sort((a, b) => {
     if (state.orderBy === 'nombre') {
       return state.order === 'asc' ? a.nombre.localeCompare(b.nombre) : b.nombre.localeCompare(a.nombre);
     }
