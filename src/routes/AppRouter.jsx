@@ -5,6 +5,8 @@ import FormCompetenciaG from "../pages/FormCompetenciaG";
 import TablaCompetenciaGenerales from "../pages/TablaCompetenciaGenerales";
 import TablaCompetenciaEspecificas from "../pages/TablaCompetenciaEspecificas";
 import Sidebar from "../views/Sidebar";
+import EditCompetenciaE from "../pages/EditCompetenciaE.jsx";
+import EditCompetenciaG from "../pages/EditCompetenciaG.jsx";
 
 const AppRouter = () => {
 
@@ -19,7 +21,8 @@ const AppRouter = () => {
                         <Route path="/formCompetenciaG" element={<FormCompetenciaG />} />
                         <Route path="/competencias-generales" element={<TablaCompetenciaGenerales/>}/>
                         <Route path="/competencias-especificas" element={<TablaCompetenciaEspecificas/>}/>
-                        {/* Agrega más rutas según sea necesario */}
+                        <Route path="/editar-competencia-especifica/:id" element={<EditCompetenciaE/>}/>
+                        <Route path="/editar-competencia-general/:id" element={<EditCompetenciaG/>}/>
                     </Routes>
                 </div>
             </div>

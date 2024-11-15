@@ -4,10 +4,12 @@ import theme from '../theme/theme';
 import { fetchCompetenciasGenerales, deleteCompetencia, editCompetencia } from '../actions/competenciaActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadData, setOrder, deleteCompetencia as deleteCompetenciaAction, editCompetencia as editCompetenciaAction } from '../slices/tablaCompetenciaGeneralesSlice';
+import { useNavigate } from "react-router-dom";
 
 const TablaCompetenciaGenerales = () => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.tablaCompetenciaGenerales);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCompetenciasGenerales()
@@ -27,12 +29,7 @@ const TablaCompetenciaGenerales = () => {
   };
 
   const handleEdit = (id) => {
-    const updatedCompetencia = prompt("Ingrese el nuevo nombre de la competencia:");
-    if (updatedCompetencia) {
-      editCompetencia(id, updatedCompetencia)
-        .then(() => dispatch(editCompetenciaAction({ id, updatedNombre: updatedCompetencia })))
-        .catch(console.error);
-    }
+    navigate(`/editar-competencia-general/${id}`);
   };
 
   const sortedCompetencias = [...state.competenciasGenerales].sort((a, b) => {

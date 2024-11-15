@@ -85,3 +85,14 @@ export const createCompetenciaGeneral = async (competencia) => {
         throw error;
     }
 };
+
+export const fetchCompetenciaById = async (id) => {
+    try {
+        const response = await fetch(`http://localhost:8080/api/competencia/${id}`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error al obtener la competencia:', error);
+        throw error;
+    }
+};

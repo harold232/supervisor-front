@@ -4,10 +4,12 @@ import theme from '../theme/theme';
 import { fetchCompetenciasEspecificas, deleteCompetencia, editCompetencia } from '../actions/competenciaActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadData, setOrder, deleteCompetencia as deleteCompetenciaAction, editCompetencia as editCompetenciaAction } from '../slices/tablaCompetenciaEspecificasSlice';
+import { useNavigate } from "react-router-dom";
 
 const TablaCompetenciaEspecificas = () => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.tablaCompetenciaEspecificas);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCompetenciasEspecificas()
@@ -27,12 +29,7 @@ const TablaCompetenciaEspecificas = () => {
   };
 
   const handleEdit = (id) => {
-    const updatedCompetencia = prompt("Ingrese el nuevo nombre de la competencia:");
-    if (updatedCompetencia) {
-      editCompetencia(id, updatedCompetencia)
-        .then(() => dispatch(editCompetenciaAction({ id, updatedNombre: updatedCompetencia })))
-        .catch(console.error);
-    }
+    navigate(`/editar-competencia-especifica/${id}`);
   };
 
   const sortedCompetencias = [...state.competenciasEspecificas].sort((a, b) => {
