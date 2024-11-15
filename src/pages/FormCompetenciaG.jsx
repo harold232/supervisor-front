@@ -6,32 +6,36 @@ import { fetchInstituciones } from "../actions/institucionActions";
 import { fetchDepartamentos } from "../actions/departamentoActions";
 import { createCompetenciaGeneral } from "../actions/competenciaActions";
 import { useDispatch, useSelector } from 'react-redux';
-import { setCodigo, setNombre, setDescripcion, setPlanid, setInstitucionid, setDepartamentoid, setPlanes, setInstituciones, setDepartamentos, resetForm } from '../slices/formReducer';
+import { setCodigo, setNombre, setDescripcion, setPlanid, setInstitucionid, setDepartamentoid, resetForm } from '../slices/formReducer';
 
 const FormCompetenciaG = () => {
   const dispatch = useDispatch();
-  const state = useSelector((state) => state.form);
+  const formState = useSelector((state) => state.form);
+  const planesState = useSelector((state) => state.plan);
+  const institucionesState = useSelector((state) => state.institucion);
+  const departamentosState = useSelector((state) => state.departamento);
 
   const loadData = () => {
-    fetchPlanes().then(data => dispatch(setPlanes(data))).catch(console.error);
-    fetchInstituciones().then(data => dispatch(setInstituciones(data))).catch(console.error);
-    fetchDepartamentos().then(data => dispatch(setDepartamentos(data))).catch(console.error);
+    dispatch(fetchPlanes());
+    dispatch(fetchInstituciones());
+    dispatch(fetchDepartamentos());
   };
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [dispatch]);
 
-  const handleSubmit = () => {
-    const { codigo, nombre, descripcion, planid, institucionid, departamentoid } = state;
+  const handleSubmit = async () => {
+    const { codigo, nombre, descripcion, planid, institucionid, departamentoid } = formState;
     const competencia = { codigo, nombre, descripcion, planid, institucionid, departamentoid };
-    createCompetenciaGeneral(competencia)
-      .then(data => {
-        console.log('Éxito:', data);
-        dispatch(resetForm());
-        loadData();
-      })
-      .catch(console.error);
+    try {
+      const result = await dispatch(createCompetenciaGeneral(competencia));
+      console.log('Éxito:', result);
+      dispatch(resetForm());
+      loadData();
+    } catch (error) {
+      console.error('Error al crear competencia general:', error);
+    }
   };
 
   const handleCancel = () => {
@@ -46,14 +50,14 @@ const FormCompetenciaG = () => {
         <FormGroup>
           <TextField
             label="Código"
-            value={state.codigo}
+            value={formState.codigo}
             onChange={(e) => dispatch(setCodigo(e.target.value))}
             sx={{ m: 'normal', background: "#EFF1F6" }}
             required
           />
           <TextField
             label="Nombre"
-            value={state.nombre}
+            value={formState.nombre}
             onChange={(e) => dispatch(setNombre(e.target.value))}
             margin="normal"
             sx={{ background: "#EFF1F6" }}
@@ -61,7 +65,7 @@ const FormCompetenciaG = () => {
           />
           <TextField
             label="Descripción"
-            value={state.descripcion}
+            value={formState.descripcion}
             onChange={(e) => dispatch(setDescripcion(e.target.value))}
             margin="normal"
             sx={{ background: "#EFF1F6" }}
@@ -70,10 +74,10 @@ const FormCompetenciaG = () => {
           <FormControl margin="normal" sx={{ background: "#EFF1F6" }} required>
             <InputLabel>Plan</InputLabel>
             <Select
-              value={state.planid}
+              value={formState.planid}
               onChange={(e) => dispatch(setPlanid(e.target.value))}
             >
-              {state.planes.map((plan) => (
+              {planesState.planes.map((plan) => (
                 <MenuItem key={plan.id} value={plan.id}>
                   {plan.codigo} - {plan.descripcion}
                 </MenuItem>
@@ -83,10 +87,10 @@ const FormCompetenciaG = () => {
           <FormControl margin="normal" sx={{ background: "#EFF1F6" }} required>
             <InputLabel>Institución</InputLabel>
             <Select
-              value={state.institucionid}
+              value={formState.institucionid}
               onChange={(e) => dispatch(setInstitucionid(e.target.value))}
             >
-              {state.instituciones.map((institucion) => (
+              {institucionesState.instituciones.map((institucion) => (
                 <MenuItem key={institucion.id} value={institucion.id}>
                   {institucion.codigo} - {institucion.nombreCorto}
                 </MenuItem>
@@ -96,10 +100,10 @@ const FormCompetenciaG = () => {
           <FormControl margin="normal" sx={{ background: "#EFF1F6" }} required>
             <InputLabel>Departamento</InputLabel>
             <Select
-              value={state.departamentoid}
+              value={formState.departamentoid}
               onChange={(e) => dispatch(setDepartamentoid(e.target.value))}
             >
-              {state.departamentos.map((departamento) => (
+              {departamentosState.departamentos.map((departamento) => (
                 <MenuItem key={departamento.id} value={departamento.id}>
                   {departamento.codigo} - {departamento.nombre}
                 </MenuItem>

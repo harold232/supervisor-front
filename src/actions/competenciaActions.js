@@ -1,87 +1,123 @@
-export const fetchCompetenciasEspecificas = async () => {
-    try {
-        const response = await fetch('http://localhost:8080/api/competencia/competencias-especificas');
+import {
+  iniciaCargaCompetencias,
+  cargaCompetenciasEspecificas,
+  cargaCompetenciasGenerales,
+  setError,
+  deleteCompetenciaEspecifica,
+  deleteCompetenciaGeneral,
+  editCompetenciaEspecifica,
+  editCompetenciaGeneral,
+  addCompetenciaEspecifica,
+  addCompetenciaGeneral,
+  } from '../slices/competenciaSlice';
+  
+  const urlBack = import.meta.env.VITE_APP_BACKEND_URL;
+  const competencias = import.meta.env.VITE_APP_API_COMPETENCIAS;
+  
+  export const fetchCompetenciasEspecificas = () => {
+    return async (dispatch) => {
+      dispatch(iniciaCargaCompetencias());
+      try {
+        const response = await fetch(`${urlBack + competencias}/competencias-especificas`);
         const data = await response.json();
-        return data;
-    } catch (error) {
+        dispatch(cargaCompetenciasEspecificas(data));
+      } catch (error) {
         console.error('Error al obtener competencias especificas:', error);
-        throw error;
-    }
-};
-
-export const fetchCompetenciasGenerales = async () => {
-    try {
-        const response = await fetch('http://localhost:8080/api/competencia/competencias-generales');
+        dispatch(setError(error.toString()));
+      }
+    };
+  };
+  
+  export const fetchCompetenciasGenerales = () => {
+    return async (dispatch) => {
+      dispatch(iniciaCargaCompetencias());
+      try {
+        const response = await fetch(`${urlBack + competencias}/competencias-generales`);
         const data = await response.json();
-        return data;
-    } catch (error) {
+        dispatch(cargaCompetenciasGenerales(data));
+      } catch (error) {
         console.error('Error al obtener competencias generales:', error);
-        throw error;
-    }
-};
-
-export const deleteCompetencia = async (id) => {
-    try {
-        const response = await fetch(`http://localhost:8080/api/competencia/${id}`, {
-            method: 'DELETE',
+        dispatch(setError(error.toString()));
+      }
+    };
+  };
+  
+  export const deleteCompetencia = (id) => {
+    return async (dispatch) => {
+      try {
+        const response = await fetch(`${urlBack + competencias}/${id}`, {
+          method: 'DELETE',
         });
         if (!response.ok) {
-            throw new Error('Error al eliminar la competencia');
+          throw new Error('Error al eliminar la competencia');
         }
-    } catch (error) {
+        dispatch(deleteCompetenciaEspecifica(id)); // or deleteCompetenciaGeneral(id) based on context
+      } catch (error) {
         console.error('Error al eliminar la competencia:', error);
-        throw error;
-    }
-};
-
-export const editCompetencia = async (id, updatedCompetencia) => {
-    try {
-        const response = await fetch(`http://localhost:8080/api/competencia/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ nombre: updatedCompetencia }),
+        dispatch(setError(error.toString()));
+      }
+    };
+  };
+  
+  export const editCompetencia = (id, updatedCompetencia) => {
+    return async (dispatch) => {
+      try {
+        const response = await fetch(`${urlBack + competencias}/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ nombre: updatedCompetencia }),
         });
         if (!response.ok) {
-            throw new Error('Error al editar la competencia');
+          throw new Error('Error al editar la competencia');
         }
-    } catch (error) {
+        dispatch(editCompetenciaEspecifica({ id, updatedNombre: updatedCompetencia })); // or editCompetenciaGeneral based on context
+      } catch (error) {
         console.error('Error al editar la competencia:', error);
-        throw error;
-    }
-};
-
-export const createCompetenciaEspecifica = async (competencia) => {
-    try {
-        const response = await fetch('http://localhost:8080/api/competencia/especifica', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(competencia),
+        dispatch(setError(error.toString()));
+      }
+    };
+  };
+  
+  export const createCompetenciaEspecifica = (competencia) => {
+    return async (dispatch) => {
+      try {
+        const response = await fetch(`${urlBack + competencias}/especifica`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(competencia),
         });
         const data = await response.json();
+        dispatch(addCompetenciaEspecifica(data));
         return data;
-    } catch (error) {
+      } catch (error) {
         console.error('Error:', error);
+        dispatch(setError(error.toString()));
         throw error;
-    }
-};
-
-export const createCompetenciaGeneral = async (competencia) => {
-    try {
-        const response = await fetch('http://localhost:8080/api/competencia/general', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(competencia),
+      }
+    };
+  };
+  
+  export const createCompetenciaGeneral = (competencia) => {
+    return async (dispatch) => {
+      try {
+        const response = await fetch(`${urlBack + competencias}/general`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(competencia),
         });
         const data = await response.json();
+        dispatch(addCompetenciaGeneral(data));
         return data;
-    } catch (error) {
+      } catch (error) {
         console.error('Error:', error);
+        dispatch(setError(error.toString()));
         throw error;
-    }
-};
+      }
+    };
+  };
