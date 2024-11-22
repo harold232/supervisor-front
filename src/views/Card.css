@@ -1,0 +1,18 @@
+.card {
+    background: linear-gradient(45deg, #ae675b, #e29688);
+    color: #fff;
+    text-align: left;
+    border-radius: 13px;
+    color: #fffaea;
+    cursor: pointer;
+}
+
+.text-card {
+    margin-left: 25px;
+}
+
+.count {
+    font-weight: 100;
+    font-size: 4rem;
+    line-height: 1;
+}

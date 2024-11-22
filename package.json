@@ -15,6 +15,7 @@
     "@fontsource/roboto": "^5.1.0",
     "@mui/icons-material": "^6.1.1",
     "@mui/material": "^6.1.1",
+    "@mui/styles": "^6.1.7",
     "@reduxjs/toolkit": "^2.3.0",
     "js-cookie": "^3.0.5",
     "muireact": "file:",

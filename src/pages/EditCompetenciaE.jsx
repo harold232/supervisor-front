@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Container, FormGroup, TextField, Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import { Container, FormGroup, TextField, Select, MenuItem, InputLabel, FormControl, Grid, Box } from "@mui/material";
 import Buttons from "../views/Buttons";
 import { fetchPlanes } from "../actions/planActions";
 import { fetchInstituciones } from "../actions/institucionActions";
@@ -21,16 +21,21 @@ const EditCompetenciaE = () => {
     };
 
     useEffect(() => {
+        fetchCompetenciaById(id)
+          .then(data => {
+            dispatch(setCodigo(data.codigo || ''));
+            dispatch(setNombre(data.nombre || ''));
+            dispatch(setDescripcion(data.descripcion || ''));
+            dispatch(setPlanid(data.planid || ''));
+            dispatch(setInstitucionid(data.institucionid || ''));
+            dispatch(setDepartamentoid(data.departamentoid || ''));
+            dispatch(setPlanes(data.planes || []));
+            dispatch(setInstituciones(data.instituciones || []));
+            dispatch(setDepartamentos(data.departamentos || []));
+          })
+          .catch(console.error);
         loadData();
-        fetchCompetenciaById(id).then(data => {
-            dispatch(setCodigo(data.codigo));
-            dispatch(setNombre(data.nombre));
-            dispatch(setDescripcion(data.descripcion));
-            dispatch(setPlanid(data.planid));
-            dispatch(setInstitucionid(data.institucionid));
-            dispatch(setDepartamentoid(data.departamentoid));
-        }).catch(console.error);
-    }, [id]);
+      }, [dispatch, id]);
 
     const handleSubmit = () => {
         const { codigo, nombre, descripcion, planid, institucionid, departamentoid } = state;
@@ -50,75 +55,153 @@ const EditCompetenciaE = () => {
     };
 
     return (
-        <Container sx={{ borderRadius: 5, pb: 2, textAlign: "center", background: "#E1E2E7" }}>
-            <h2>Editar Competencia Específica</h2>
-            <div>
-                <FormGroup>
-                    <TextField
-                        label="Código"
-                        value={state.codigo}
-                        onChange={(e) => dispatch(setCodigo(e.target.value))}
-                        sx={{ m: 'normal', background: "#EFF1F6" }}
-                        required
-                    />
-                    <TextField
-                        label="Nombre"
-                        value={state.nombre}
-                        onChange={(e) => dispatch(setNombre(e.target.value))}
-                        margin="normal"
-                        sx={{ background: "#EFF1F6" }}
-                        required
-                    />
-                    <TextField
-                        label="Descripción"
-                        value={state.descripcion}
-                        onChange={(e) => dispatch(setDescripcion(e.target.value))}
-                        margin="normal"
-                        sx={{ background: "#EFF1F6" }}
-                        required
-                    />
-                    <FormControl margin="normal" sx={{ background: "#EFF1F6" }} required>
-                        <InputLabel>Plan</InputLabel>
-                        <Select
-                            value={state.planid}
-                            onChange={(e) => dispatch(setPlanid(e.target.value))}
-                        >
-                            {state.planes.map((plan) => (
-                                <MenuItem key={plan.id} value={plan.id}>
-                                    {plan.codigo} - {plan.descripcion}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl margin="normal" sx={{ background: "#EFF1F6" }} required>
-                        <InputLabel>Institución</InputLabel>
-                        <Select
-                            value={state.institucionid}
-                            onChange={(e) => dispatch(setInstitucionid(e.target.value))}
-                        >
-                            {state.instituciones.map((institucion) => (
-                                <MenuItem key={institucion.id} value={institucion.id}>
-                                    {institucion.codigo} - {institucion.nombreCorto}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <FormControl margin="normal" sx={{ background: "#EFF1F6" }} required>
-                        <InputLabel>Departamento</InputLabel>
-                        <Select
-                            value={state.departamentoid}
-                            onChange={(e) => dispatch(setDepartamentoid(e.target.value))}
-                        >
-                            {state.departamentos.map((departamento) => (
-                                <MenuItem key={departamento.id} value={departamento.id}>
-                                    {departamento.codigo} - {departamento.nombre}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </FormGroup>
-            </div>
-            <Buttons handleSubmit={handleSubmit} handleCancel={handleCancel} />
+        <Container className="container">
+            <h2 variant="h2" className="title-form-e">
+                Editar Competencia Específica
+            </h2>
+            <form noValidate onSubmit={handleSubmit}>
+                <Grid container spacing={6}>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth>
+                            <TextField
+                                label="Código"
+                                value={state.codigo}
+                                onChange={(e) => dispatch(setCodigo(e.target.value))}
+                                className="textField"
+                                InputProps={{
+                                    sx: {
+                                        borderRadius: '10px',
+                                        background: '#F5F5F5',
+                                        '& .MuiOutlinedInput-notchedOutline': {
+                                            border: 'none',
+                                        },
+                                    },
+                                }}
+                                required
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth>
+                            <TextField
+                                label="Nombre"
+                                value={state.nombre}
+                                onChange={(e) => dispatch(setNombre(e.target.value))}
+                                className="textField"
+                                InputProps={{
+                                    sx: {
+                                        borderRadius: '10px',
+                                        background: '#F5F5F5',
+                                        '& .MuiOutlinedInput-notchedOutline': {
+                                            border: 'none',
+                                        },
+                                    },
+                                }}
+                                required
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormControl fullWidth>
+                            <TextField
+                                label="Descripción"
+                                value={state.descripcion}
+                                onChange={(e) => dispatch(setDescripcion(e.target.value))}
+                                className="textField"
+                                InputProps={{
+                                    sx: {
+                                        borderRadius: '10px',
+                                        background: '#F5F5F5',
+                                        '& .MuiOutlinedInput-notchedOutline': {
+                                            border: 'none',
+                                        },
+                                    },
+                                }}
+                                required
+                            />
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth>
+                            <InputLabel>Plan</InputLabel>
+                            <Select
+                                value={state.planid}
+                                onChange={(e) => dispatch(setPlanid(e.target.value))}
+                                className="textField"
+                                sx={{
+                                    borderRadius: '10px',
+                                    background: '#F5F5F5',
+                                    '& .MuiOutlinedInput-notchedOutline': {
+                                        border: 'none',
+                                        boxShadow: '0px 4px 6px rgba(13, 15, 22, 0.2);',
+                                    },
+                                }}
+                                required
+                            >
+                                {state.planes.map((plan) => (
+                                    <MenuItem key={plan.id} value={plan.id}>
+                                        {plan.codigo} - {plan.descripcion}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth>
+                            <InputLabel>Institución</InputLabel>
+                            <Select
+                                value={state.institucionid}
+                                onChange={(e) => dispatch(setInstitucionid(e.target.value))}
+                                className="textField"
+                                sx={{
+                                    borderRadius: '10px',
+                                    background: '#F5F5F5',
+                                    '& .MuiOutlinedInput-notchedOutline': {
+                                        border: 'none',
+                                        boxShadow: '0px 4px 6px rgba(13, 15, 22, 0.2);',
+                                    },
+                                }}
+                                required
+                            >
+                                {state.instituciones.map((institucion) => (
+                                    <MenuItem key={institucion.id} value={institucion.id}>
+                                        {institucion.codigo} - {institucion.nombreCorto}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormControl fullWidth>
+                            <InputLabel>Departamento</InputLabel>
+                            <Select
+                                value={state.departamentoid}
+                                onChange={(e) => dispatch(setDepartamentoid(e.target.value))}
+                                className="textField"
+                                sx={{
+                                    borderRadius: '10px',
+                                    background: '#F5F5F5',
+                                    '& .MuiOutlinedInput-notchedOutline': {
+                                        border: 'none',
+                                        boxShadow: ' 0px 4px 6px rgba(13, 15, 22, 0.2);',
+                                    },
+                                }}
+                                required
+                            >
+                                {state.departamentos.map((departamento) => (
+                                    <MenuItem key={departamento.id} value={departamento.id}>
+                                        {departamento.codigo} - {departamento.nombre}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
+                <Box sx={{ mt: 2 }}>
+                    <Buttons handleSubmit={handleSubmit} handleCancel={handleCancel} />
+                </Box>
+            </form>
+
         </Container>
     );
 };

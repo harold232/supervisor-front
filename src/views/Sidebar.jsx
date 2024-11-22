@@ -37,16 +37,16 @@ const Sidebar = () => {
         anchor="left"
         open={isSidebarOpen}
         sx={{
-          width: isSidebarOpen ? 337 : 0, // Cambia el ancho según si está abierto o no
-          transition: 'width 0.3s ease', // Animación para hacer el efecto de deslizamiento
-          bgcolor: '#F5F5F5', // Color de fondo
+          width: isSidebarOpen ? 337 : 0,
+          transition: 'width 0.3s ease',
+          bgcolor: '#F5F5F5',
           borderRadius: '15px',
           m: '7px',
           '& .MuiDrawer-paper': {
-            width: isSidebarOpen ? 337 : 0, // Cambia el ancho del papel del Drawer
-            transition: 'width 0.3s ease', // Animación del papel
-            borderRadius: '15px', // Agrega border-radius al Drawer
-            backgroundColor: '#EFF1F6', // Fondo del Drawer
+            width: isSidebarOpen ? 337 : 0,
+            transition: 'width 0.3s ease',
+            borderRadius: '15px',
+            backgroundColor: '#EFF1F6',
             m: '7px'
           },
         }}
@@ -86,7 +86,7 @@ const Sidebar = () => {
                   },
                 }}
               >
-                <ListItemIcon>{module.icon}</ListItemIcon>
+                <ListItemIcon >{module.icon}</ListItemIcon>
                 <ListItemText primary={module.text} />
               </ListItem>
             ))}

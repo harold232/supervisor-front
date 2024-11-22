@@ -14,7 +14,7 @@ const AppRouter = () => {
         <Router>
             <div style={{ display: 'flex' }}>
                 <Sidebar />
-                <div style={{ flexGrow: 1, padding: '16px' }}>
+                <div style={{ flexGrow: 1, padding: '18px' }}>
                     <Routes>
                         <Route path="/" element={<MainScreen />} />
                         <Route path="/formCompetenciaE" element={<FormCompetenciaE />} />

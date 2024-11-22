@@ -1,14 +1,15 @@
-import { Button, Box } from "@mui/material"
+import { Button, Box } from "@mui/material";
+import "./Buttons.css";
 
 export default function Buttons({ handleSubmit, handleCancel }) {
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 20 }}>
-            <Button onClick={handleSubmit} variant="contained" sx={{ mt: 2, borderRadius: '10px', backgroundColor: '#205274' }}>
+        <Box className="box">
+            <Button onClick={handleSubmit} variant="contained" className="button-aceptar">
                 Aceptar
             </Button>
-            <Button onClick={handleCancel} variant="contained" sx={{ mt: 2, borderRadius: '10px', backgroundColor: '#71384D' }}>
+            <Button onClick={handleCancel} variant="contained" className="button-cancelar">
                 Cancelar
             </Button>
         </Box>
-    )
+    );
 }

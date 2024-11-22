@@ -20,6 +20,18 @@ export const fetchCompetenciasGenerales = async () => {
     }
 };
 
+export const fetchCompetencias = async () => {
+    try {
+        const response = await fetch('http://localhost:8080/api/competencia/all');
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error al obtener competencias :', error);
+        throw error;
+    }
+};
+
+
 export const deleteCompetencia = async (id) => {
     try {
         const response = await fetch(`http://localhost:8080/api/competencia/${id}`, {
