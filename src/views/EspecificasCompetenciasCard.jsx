@@ -20,7 +20,7 @@ const EspecificasCompetenciasCard = () => {
     }, []);
   
     return (
-      <Card sx={{ borderRadius: "13px", marginBottom: "30px" }}>
+      <Card sx={{ borderRadius: "10px", marginBottom: "30px" }}>
         <CardContent className='card'>
           <Typography variant="h5" component="div" className='text-card'>
             Competencias Específicas

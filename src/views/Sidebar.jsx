@@ -46,8 +46,7 @@ const Sidebar = () => {
             width: isSidebarOpen ? 337 : 0,
             transition: 'width 0.3s ease',
             borderRadius: '15px',
-            backgroundColor: '#EFF1F6',
-            m: '7px'
+            backgroundColor: '#e3e4e6'
           },
         }}
       >

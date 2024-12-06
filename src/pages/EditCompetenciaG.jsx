@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { Container, FormGroup, TextField, Select, MenuItem, InputLabel, FormControl, Grid, Box } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import { Container, TextField, Select, MenuItem, InputLabel, FormControl, Grid, Box } from "@mui/material";
 import Buttons from "../views/Buttons";
 import { fetchPlanes } from "../actions/planActions";
 import { fetchInstituciones } from "../actions/institucionActions";
@@ -13,6 +13,7 @@ const EditCompetenciaG = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const state = useSelector((state) => state.form);
+    const navigate = useNavigate();
 
     const loadData = () => {
         fetchPlanes().then(data => dispatch(setPlanes(data))).catch(console.error);
@@ -22,41 +23,43 @@ const EditCompetenciaG = () => {
 
     useEffect(() => {
         fetchCompetenciaById(id)
-          .then(data => {
-            dispatch(setCodigo(data.codigo || ''));
-            dispatch(setNombre(data.nombre || ''));
-            dispatch(setDescripcion(data.descripcion || ''));
-            dispatch(setPlanid(data.planid || ''));
-            dispatch(setInstitucionid(data.institucionid || ''));
-            dispatch(setDepartamentoid(data.departamentoid || ''));
-            dispatch(setPlanes(data.planes || []));
-            dispatch(setInstituciones(data.instituciones || []));
-            dispatch(setDepartamentos(data.departamentos || []));
-          })
-          .catch(console.error);
-        loadData();
-      }, [dispatch, id]);
-
-    const handleSubmit = () => {
-        const { codigo, nombre, descripcion, planid, institucionid, departamentoid } = state;
-        const competencia = { codigo, nombre, descripcion, planid, institucionid, departamentoid };
-        editCompetencia(id, competencia)
             .then(data => {
-                console.log('Éxito:', data);
+                dispatch(setCodigo(data.codigo || ''));
+                dispatch(setNombre(data.nombre || ''));
+                dispatch(setDescripcion(data.descripcion || ''));
+                dispatch(setPlanid(data.planid || ''));
+                dispatch(setInstitucionid(data.institucionid || ''));
+                dispatch(setDepartamentoid(data.departamentoid || ''));
+            })
+            .catch(console.error);
+        loadData();
+    }, [dispatch, id]);
+
+    const handleSubmit = (e) => {
+        const updatedCompetencia = {
+            codigo: state.codigo,
+            nombre: state.nombre,
+            descripcion: state.descripcion,
+            planid: state.planid,
+            institucionid: state.institucionid,
+            departamentoid: state.departamentoid,
+        };
+        editCompetencia(id, updatedCompetencia)
+            .then(() => {
                 dispatch(resetForm());
-                loadData();
+                navigate('/competencias-generales');
             })
             .catch(console.error);
     };
 
     const handleCancel = () => {
         dispatch(resetForm());
-        loadData();
+        navigate('/competencias-generales');
     };
 
     return (
         <Container className="container">
-            <h2 variant="h2" className="title-form-e">
+            <h2 class="title-form-e">
                 Editar Competencia General
             </h2>
             <form noValidate onSubmit={handleSubmit}>

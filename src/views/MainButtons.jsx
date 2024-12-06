@@ -1,4 +1,4 @@
-import { Button, Container, Grid } from "@mui/material";
+import { Container, Grid, Button, AppBar, Toolbar, Typography} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import "./MainButtons.css";
@@ -7,6 +7,8 @@ import GeneralCompetenciasCard from "./GeneralCompetenciasCard";
 import TablaCompetencias from "./TablaCompetencias";
 import AddIcon from '@mui/icons-material/Add';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import GraficosCarrusel from "./GraficosCarrusel";
+import DownloadPdfButton from "./DownloadPdfButton";
 
 const MainScreen = () => {
     const navigate = useNavigate();
@@ -38,21 +40,27 @@ const MainScreen = () => {
 
     return (
         <Container className="container-main">
-            <Grid container spacing={2}>
+                 
+            <Grid container spacing={5}>
                 <Grid item xs={12}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6} onClick={handleFilterGeneral}>
-                            <GeneralCompetenciasCard  />
+                    <Grid container spacing={6}>
+                        <Grid item xs={12} sm={3} onClick={handleFilterGeneral}>
+                            <GeneralCompetenciasCard />
                         </Grid>
-                        <Grid item xs={12} sm={6} onClick={handleFilterEspecifica}>
+                        <Grid item xs={12} sm={3} onClick={handleFilterEspecifica}>
                             <EspecificasCompetenciasCard />
+                        </Grid>
+                        <Grid item xs={12} sm={6} >
+                            <GraficosCarrusel />
                         </Grid>
                     </Grid>
                 </Grid>
+
                 <Grid item xs={12} sm={8}>
                     <TablaCompetencias filter={filter} />
                 </Grid>
-                <Grid item xs={12} sm={4} container direction="column" spacing={10} className="container-button">
+
+                <Grid item xs={12} sm={4} container direction="column" spacing={8} className="container-button">
                     <Grid item>
                         <Button
                             variant="contained"
@@ -93,7 +101,11 @@ const MainScreen = () => {
                             Ver Competencias Especificas
                         </Button>
                     </Grid>
+                    <Grid item>
+                        <DownloadPdfButton /> {/* Usa el componente DownloadPdfButton */}
+                    </Grid>
                 </Grid>
+
             </Grid>
         </Container>
     );

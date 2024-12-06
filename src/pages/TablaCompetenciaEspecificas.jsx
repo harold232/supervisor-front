@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableSortLabel, Button, ThemeProvider, TablePagination } from "@mui/material";
+import { Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TableSortLabel, Button, ThemeProvider, TablePagination, FormControl, InputLabel, Select, MenuItem, Grid } from "@mui/material";
 import theme from '../theme/theme';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,6 +15,7 @@ const TablaCompetenciaEspecificas = () => {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [filters, setFilters] = useState({ tipo: 'E', departamentoId: '', institucionId: '', planId: '' });
 
   useEffect(() => {
     fetchCompetenciasEspecificas()
@@ -46,6 +47,27 @@ const TablaCompetenciaEspecificas = () => {
     navigate(`/editar-competencia-especifica/${id}`);
   };
 
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({ ...filters, [name]: value });
+  };
+
+  const applyFilters = () => {
+    const query = new URLSearchParams(filters);
+    fetch(`http://localhost:8080/api/competencia/buscar?${query}`)
+      .then(response => response.json())
+      .then(data => dispatch(loadData(data)))
+      .catch(console.error);
+  };
+
+  const clearFilters = () => {
+    setFilters({ tipo: 'E', departamentoId: '', institucionId: '', planId: '' });
+    fetchCompetenciasEspecificas()
+      .then(data => dispatch(loadData(data)))
+      .catch(console.error);
+  };
+
+
   const sortedCompetencias = [...state.competenciasEspecificas].sort((a, b) => {
     if (state.orderBy === 'codigo') {
       return state.order === 'asc' ? a.codigo.localeCompare(b.codigo) : b.codigo.localeCompare(a.codigo);
@@ -61,8 +83,64 @@ const TablaCompetenciaEspecificas = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <h2 class="h2-table">Competencias Especificas</h2>
+      <h2 className="h2-table">Competencias Especificas</h2>
       <Container className="container-table-page">
+        <div className="filters">
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={4}>
+              <FormControl margin="normal" fullWidth>
+                <InputLabel>Departamento</InputLabel>
+                <Select
+                  name="departamentoId"
+                  value={filters.departamentoId}
+                  onChange={handleFilterChange}
+                >
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  <MenuItem value="1">Facultad de Ingeniería de Sistemas e Informática</MenuItem>
+                  <MenuItem value="2">E.P. Ingeniería de Software</MenuItem>
+                  <MenuItem value="3">E.P. Ingeniería de Sistemas</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <FormControl margin="normal" fullWidth>
+                <InputLabel>Institución</InputLabel>
+                <Select
+                  name="institucionId"
+                  value={filters.institucionId}
+                  onChange={handleFilterChange}
+                >
+                  <MenuItem value=""><em>Ninguna</em></MenuItem>
+                  <MenuItem value="1">Univ. San Marcos</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <FormControl margin="normal" fullWidth>
+                <InputLabel>Plan</InputLabel>
+                <Select
+                  name="planId"
+                  value={filters.planId}
+                  onChange={handleFilterChange}
+                >
+                  <MenuItem value=""><em>Ninguna</em></MenuItem>
+                  <MenuItem value="1">Plan 2018</MenuItem>
+                  <MenuItem value="2">Plan 2015</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6} sx={{ p: 0 }}>
+            <Button variant="contained" color="primary" onClick={applyFilters} fullWidth>
+              Aplicar Filtros
+            </Button>
+          </Grid>
+          <Grid item xs={12} sm={6} sx={{ p: 0 }}>
+            <Button variant="contained" color="secondary" onClick={clearFilters} fullWidth>
+              Limpiar Filtros
+            </Button>
+          </Grid>
+          </Grid>
+        </div>
         <TableContainer component={Paper} className="container-table-child">
           <Table className="custom-table">
             <TableHead>

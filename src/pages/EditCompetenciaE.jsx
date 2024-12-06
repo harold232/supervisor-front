@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Container, FormGroup, TextField, Select, MenuItem, InputLabel, FormControl, Grid, Box } from "@mui/material";
 import Buttons from "../views/Buttons";
 import { fetchPlanes } from "../actions/planActions";
@@ -13,6 +13,7 @@ const EditCompetenciaE = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const state = useSelector((state) => state.form);
+    const navigate = useNavigate();
 
     const loadData = () => {
         fetchPlanes().then(data => dispatch(setPlanes(data))).catch(console.error);
@@ -21,37 +22,47 @@ const EditCompetenciaE = () => {
     };
 
     useEffect(() => {
+        
         fetchCompetenciaById(id)
-          .then(data => {
-            dispatch(setCodigo(data.codigo || ''));
-            dispatch(setNombre(data.nombre || ''));
-            dispatch(setDescripcion(data.descripcion || ''));
-            dispatch(setPlanid(data.planid || ''));
-            dispatch(setInstitucionid(data.institucionid || ''));
-            dispatch(setDepartamentoid(data.departamentoid || ''));
-            dispatch(setPlanes(data.planes || []));
-            dispatch(setInstituciones(data.instituciones || []));
-            dispatch(setDepartamentos(data.departamentos || []));
-          })
-          .catch(console.error);
-        loadData();
-      }, [dispatch, id]);
+            .then(data => {
+                dispatch(setCodigo(data.codigo || ''));
+                dispatch(setNombre(data.nombre || ''));
+                dispatch(setDescripcion(data.descripcion || ''));
+                dispatch(setPlanid(data.planid || ''));
+                dispatch(setInstitucionid(data.institucionid || ''));
+                dispatch(setDepartamentoid(data.departamentoid || ''));
+            })
+            .catch(console.error);
+            loadData();
+            
+    }, [dispatch, id]);
 
     const handleSubmit = () => {
-        const { codigo, nombre, descripcion, planid, institucionid, departamentoid } = state;
-        const competencia = { codigo, nombre, descripcion, planid, institucionid, departamentoid };
-        editCompetencia(id, competencia)
+        if (!state.codigo || !state.nombre || !state.descripcion || !state.planid || !state.institucionid || !state.departamentoid) {
+          alert('Todos los campos son obligatorios');
+          return;
+        }
+        const updatedCompetencia = {
+          codigo: state.codigo,
+          nombre: state.nombre,
+          descripcion: state.descripcion,
+          planid: state.planid,
+          institucionid: state.institucionid,
+          departamentoid: state.departamentoid,
+        };
+        console.log(updatedCompetencia);
+        editCompetencia(id, updatedCompetencia)
             .then(data => {
                 console.log('Éxito:', data);
                 dispatch(resetForm());
-                loadData();
+                navigate('/competencias-especificas');
             })
             .catch(console.error);
     };
 
     const handleCancel = () => {
         dispatch(resetForm());
-        loadData();
+        navigate('/competencias-especificas');
     };
 
     return (
@@ -64,7 +75,7 @@ const EditCompetenciaE = () => {
                     <Grid item xs={12} sm={6}>
                         <FormControl fullWidth>
                             <TextField
-                                label="Código"
+                                label="Codigo"
                                 value={state.codigo}
                                 onChange={(e) => dispatch(setCodigo(e.target.value))}
                                 className="textField"

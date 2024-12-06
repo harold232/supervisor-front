@@ -20,7 +20,7 @@ const GeneralCompetenciasCard = () => {
     }, []);
   
     return (
-      <Card sx={{ borderRadius: "13px" }}>
+      <Card sx={{ borderRadius: "10px" }}>
         <CardContent className='card'>
           <Typography variant="h5" component="div" className='text-card'>
             Competencias Generales

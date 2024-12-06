@@ -1,22 +1,25 @@
 .container-table {
   width: 700px !important;
   margin-bottom: 30px;
+  margin-right: 20px !important;
+  margin-left: 0px !important;
   font-size: 30px !important;
 }
 
 .custom-table {
-  width: 800px;
+  width: 800p ;
   border-collapse: collapse;
   overflow: hidden;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  border-radius: 13px;
+  border-radius: 5px;
 }
 
 .custom-table-th {
-  padding: 15px;
+  padding: 15px; 
   background-color: #bdbec3;
   text-align: center;
   font-size: 18px !important;
+  margin-left: 0px !important;
 }
 
 .custom-table-tr {
@@ -35,11 +38,12 @@
 
 .custom-table-pagination {
   background-color: #e5e7ec;
-  border-radius: 0 0 13px 13px;
+  border-radius: 0 0 5px 5px;
 }
 
 .container-table-child {
-  border-radius: 13px !important;
+  border-radius: 5px !important;
+  margin-left: 0px !important;
 }
 
 .custom-table-tr-page:hover {

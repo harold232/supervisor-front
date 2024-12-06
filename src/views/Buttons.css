@@ -35,3 +35,16 @@
 .box .button-cancelar:hover {
     background-color: #71384D;
 }
+
+.box .button-importar {
+    height: 35px;
+    margin-top: 25px;
+    border-radius: 10px;
+    background-color: #dadada;
+    color: black;
+    width: 10%;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+

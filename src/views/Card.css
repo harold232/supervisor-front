@@ -2,9 +2,14 @@
     background: linear-gradient(45deg, #ae675b, #e29688);
     color: #fff;
     text-align: left;
-    border-radius: 13px;
+    border-radius: 10px;
     color: #fffaea;
     cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.card:hover {
+    background: linear-gradient(45deg, #d48a7a, #f3b3a8);
 }
 
 .text-card {

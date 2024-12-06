@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { Container, FormGroup, TextField, Select, MenuItem, InputLabel, FormControl, Typography, Grid, Box, Button } from "@mui/material";
 import Buttons from "../views/Buttons";
 import { fetchPlanes } from "../actions/planActions";
@@ -12,6 +13,7 @@ import './FormCompetencia.css';
 const FormCompetenciaE = () => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.form);
+  const navigate = useNavigate();
 
   const loadData = () => {
     fetchPlanes().then(data => dispatch(setPlanes(data))).catch(console.error);
@@ -40,9 +42,13 @@ const FormCompetenciaE = () => {
     loadData();
   };
 
+  const handleImportar = () => {
+    navigate('/importar-competencia');
+  };
+
   return (
     <Container className="container">
-      <h2 variant="h2" gutterBottom className="title-form-e">
+      <h2 variant="h2" className="title-form-e">
         Competencia Especifica
       </h2>
       <form noValidate onSubmit={handleSubmit}>
@@ -65,7 +71,6 @@ const FormCompetenciaE = () => {
                 }}
                 required
               />
-              {/* Puedes agregar lógica de validación aquí */}
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -86,7 +91,6 @@ const FormCompetenciaE = () => {
                 }}
                 required
               />
-              {/* Puedes agregar lógica de validación aquí */}
             </FormControl>
           </Grid>
           <Grid item xs={12}>
@@ -107,7 +111,6 @@ const FormCompetenciaE = () => {
                 }}
                 required
               />
-              {/* Puedes agregar lógica de validación aquí */}
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -133,7 +136,7 @@ const FormCompetenciaE = () => {
                   </MenuItem>
                 ))}
               </Select>
-              {/* Puedes agregar lógica de validación aquí */}
+              {}
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -159,7 +162,7 @@ const FormCompetenciaE = () => {
                   </MenuItem>
                 ))}
               </Select>
-              {/* Puedes agregar lógica de validación aquí */}
+              {}
             </FormControl>
           </Grid>
           <Grid item xs={12}>
@@ -185,7 +188,7 @@ const FormCompetenciaE = () => {
                   </MenuItem>
                 ))}
               </Select>
-              {/* Puedes agregar lógica de validación aquí */}
+              {}
             </FormControl>
           </Grid>
         </Grid>
@@ -193,6 +196,11 @@ const FormCompetenciaE = () => {
         <Box sx={{ mt: 2 }}>
           <Buttons handleSubmit={handleSubmit} handleCancel={handleCancel} />
         </Box>
+        <Box className="box" sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+          <Button variant="contained" className="button-importar" onClick={handleImportar}>
+            Importar
+          </Button>
+        </Box>       
       </form>
     </Container >
   );

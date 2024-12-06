@@ -53,10 +53,11 @@ export const editCompetencia = async (id, updatedCompetencia) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ nombre: updatedCompetencia }),
+            body: JSON.stringify(updatedCompetencia),
         });
         if (!response.ok) {
-            throw new Error('Error al editar la competencia');
+            console.log(updatedCompetencia);
+            throw new Error('Error al editar la competenciaa');
         }
     } catch (error) {
         console.error('Error al editar la competencia:', error);
