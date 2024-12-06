@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Container, FormGroup, TextField, Select, MenuItem, InputLabel, FormControl, Typography, Grid, Box, Button } from "@mui/material";
 import Buttons from "../views/Buttons";
@@ -9,11 +9,17 @@ import { createCompetenciaGeneral } from "../actions/competenciaActions";
 import { useDispatch, useSelector } from 'react-redux';
 import { setCodigo, setNombre, setDescripcion, setPlanid, setInstitucionid, setDepartamentoid, setPlanes, setInstituciones, setDepartamentos, resetForm } from '../slices/formReducer';
 import './FormCompetencia.css';
+import ConfirmationDialog from '../views/ConfirmationDialog';
 
 const FormCompetenciaG = () => {
   const dispatch = useDispatch();
   const state = useSelector((state) => state.form);
   const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
+  const [dialogTitle, setDialogTitle] = useState('');
+  const [dialogType, setDialogType] = useState('');
+  const [confirmAction, setConfirmAction] = useState(null);
 
   const loadData = () => {
     fetchPlanes().then(data => dispatch(setPlanes(data))).catch(console.error);
@@ -27,23 +33,59 @@ const FormCompetenciaG = () => {
 
   const handleSubmit = () => {
     const { codigo, nombre, descripcion, planid, institucionid, departamentoid } = state;
+    if (!codigo || !nombre || !descripcion || !planid || !institucionid || !departamentoid) {
+      setDialogTitle('Error');
+      setDialogMessage('Por favor, complete todos los campos e intente nuevamente.');
+      setDialogType('error');
+      setOpenDialog(true);
+      return;
+    }
     const competencia = { codigo, nombre, descripcion, planid, institucionid, departamentoid };
     createCompetenciaGeneral(competencia)
       .then(data => {
-        console.log('Éxito:', data);
+        setDialogTitle('Éxito');
+        setDialogMessage('Competencia creada con éxito.');
+        setDialogType('success');
+        setOpenDialog(true);
         dispatch(resetForm());
         loadData();
       })
-      .catch(console.error);
+      .catch(error => {
+        setDialogTitle('Error');
+        setDialogMessage('Hubo un error al crear la competencia. Por favor, intente nuevamente.');
+        setDialogType('error');
+        setOpenDialog(true);
+        console.error(error);
+      });
   };
 
   const handleCancel = () => {
-    dispatch(resetForm());
-    loadData();
+    setDialogTitle('Cancelar');
+    setDialogMessage('¿Está seguro de que desea cancelar?');
+    setDialogType('confirm');
+    setConfirmAction(() => () => {
+      dispatch(resetForm());
+      loadData();
+    });
+    setOpenDialog(true);
   };
 
   const handleImportar = () => {
     navigate('/importar-competencia');
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    if (dialogType === 'success') {
+      navigate('/competencias-especificas');
+    }
+  };
+
+  const handleConfirmDialog = () => {
+    if (confirmAction) {
+      confirmAction();
+    }
+    setOpenDialog(false);
   };
 
   return (
@@ -205,6 +247,13 @@ const FormCompetenciaG = () => {
           </Button>
         </Box>  
       </form>
+      <ConfirmationDialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        onConfirm={handleConfirmDialog}
+        title={dialogTitle}
+        message={dialogMessage}
+      />
     </Container >
   );
 };

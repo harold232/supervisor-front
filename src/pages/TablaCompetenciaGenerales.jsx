@@ -7,6 +7,7 @@ import { fetchCompetenciasGenerales, deleteCompetencia, editCompetencia } from '
 import { useDispatch, useSelector } from 'react-redux';
 import { loadData, setOrder, deleteCompetencia as deleteCompetenciaAction, editCompetencia as editCompetenciaAction } from '../slices/tablaCompetenciaGeneralesSlice';
 import { useNavigate } from "react-router-dom";
+import ConfirmationDialog from '../views/ConfirmationDialog';
 
 const TablaCompetenciaGenerales = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,10 @@ const TablaCompetenciaGenerales = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(7);
   const [filters, setFilters] = useState({ tipo: 'G', departamentoId: '', institucionId: '', planId: '' });
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
+  const [dialogTitle, setDialogTitle] = useState('');
+  const [confirmAction, setConfirmAction] = useState(null);
 
   useEffect(() => {
     fetchCompetenciasGenerales()
@@ -38,9 +43,25 @@ const TablaCompetenciaGenerales = () => {
   };
 
   const handleDelete = (id) => {
-    deleteCompetencia(id)
-      .then(() => dispatch(deleteCompetenciaAction(id)))
-      .catch(console.error);
+    setDialogTitle('Eliminar Competencia');
+    setDialogMessage('¿Está seguro de que desea eliminar esta competencia?');
+    setConfirmAction(() => () => {
+      deleteCompetencia(id)
+        .then(() => dispatch(deleteCompetenciaAction(id)))
+        .catch(console.error);
+    });
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleConfirmDialog = () => {
+    if (confirmAction) {
+      confirmAction();
+    }
+    setOpenDialog(false);
   };
 
   const handleEdit = (id) => {
@@ -212,6 +233,13 @@ const TablaCompetenciaGenerales = () => {
           />
         </TableContainer>
       </Container>
+      <ConfirmationDialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        onConfirm={handleConfirmDialog}
+        title={dialogTitle}
+        message={dialogMessage}
+      />
     </ThemeProvider>
   );
 };

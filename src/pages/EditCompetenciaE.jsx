@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, FormGroup, TextField, Select, MenuItem, InputLabel, FormControl, Grid, Box } from "@mui/material";
 import Buttons from "../views/Buttons";
@@ -8,12 +8,18 @@ import { fetchDepartamentos } from "../actions/departamentoActions";
 import { fetchCompetenciaById, editCompetencia } from "../actions/competenciaActions";
 import { useDispatch, useSelector } from 'react-redux';
 import { setCodigo, setNombre, setDescripcion, setPlanid, setInstitucionid, setDepartamentoid, setPlanes, setInstituciones, setDepartamentos, resetForm } from '../slices/formReducer';
+import ConfirmationDialog from '../views/ConfirmationDialog';
 
 const EditCompetenciaE = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const state = useSelector((state) => state.form);
     const navigate = useNavigate();
+    const [openDialog, setOpenDialog] = useState(false);
+    const [dialogMessage, setDialogMessage] = useState('');
+    const [dialogTitle, setDialogTitle] = useState('');
+    const [dialogType, setDialogType] = useState('');
+    const [confirmAction, setConfirmAction] = useState(null);
 
     const loadData = () => {
         fetchPlanes().then(data => dispatch(setPlanes(data))).catch(console.error);
@@ -22,7 +28,6 @@ const EditCompetenciaE = () => {
     };
 
     useEffect(() => {
-        
         fetchCompetenciaById(id)
             .then(data => {
                 dispatch(setCodigo(data.codigo || ''));
@@ -33,37 +38,70 @@ const EditCompetenciaE = () => {
                 dispatch(setDepartamentoid(data.departamentoid || ''));
             })
             .catch(console.error);
-            loadData();
-            
+        loadData();
+
     }, [dispatch, id]);
 
     const handleSubmit = () => {
         if (!state.codigo || !state.nombre || !state.descripcion || !state.planid || !state.institucionid || !state.departamentoid) {
-          alert('Todos los campos son obligatorios');
-          return;
+            setDialogTitle('Error');
+            setDialogMessage('Por favor, complete todos los campos e intente nuevamente.');
+            setDialogType('error');
+            setOpenDialog(true);
+            return;
         }
         const updatedCompetencia = {
-          codigo: state.codigo,
-          nombre: state.nombre,
-          descripcion: state.descripcion,
-          planid: state.planid,
-          institucionid: state.institucionid,
-          departamentoid: state.departamentoid,
+            codigo: state.codigo,
+            nombre: state.nombre,
+            descripcion: state.descripcion,
+            planid: state.planid,
+            institucionid: state.institucionid,
+            departamentoid: state.departamentoid,
         };
         console.log(updatedCompetencia);
         editCompetencia(id, updatedCompetencia)
             .then(data => {
-                console.log('Éxito:', data);
+                setDialogTitle('Éxito');
+                setDialogMessage('Competencia guardada con éxito.');
+                setDialogType('success');
+                setOpenDialog(true);
                 dispatch(resetForm());
-                navigate('/competencias-especificas');
             })
-            .catch(console.error);
+            .catch(error => {
+                setDialogTitle('Error');
+                setDialogMessage('Hubo un error al editar la competencia. Por favor, intente nuevamente.');
+                setDialogType('error');
+                setOpenDialog(true);
+                console.error(error);
+            });
     };
 
     const handleCancel = () => {
-        dispatch(resetForm());
-        navigate('/competencias-especificas');
+        setDialogTitle('Cancelar');
+        setDialogMessage('¿Está seguro de que desea cancelar?');
+        setDialogType('confirm');
+        setConfirmAction(() => () => {
+            dispatch(resetForm());
+            navigate('/competencias-especificas');
+        });
+        setOpenDialog(true);
+
     };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+        if (dialogType === 'success') {
+            navigate('/competencias-especificas');
+        }
+    };
+
+    const handleConfirmDialog = () => {
+        if (confirmAction) {
+            confirmAction();
+        }
+        setOpenDialog(false);
+    };
+
 
     return (
         <Container className="container">
@@ -212,7 +250,13 @@ const EditCompetenciaE = () => {
                     <Buttons handleSubmit={handleSubmit} handleCancel={handleCancel} />
                 </Box>
             </form>
-
+            <ConfirmationDialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                onConfirm={handleConfirmDialog}
+                title={dialogTitle}
+                message={dialogMessage}
+            />
         </Container>
     );
 };

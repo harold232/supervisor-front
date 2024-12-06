@@ -7,6 +7,7 @@ import { fetchCompetenciasEspecificas, deleteCompetencia, editCompetencia } from
 import { useDispatch, useSelector } from 'react-redux';
 import { loadData, setOrder, deleteCompetencia as deleteCompetenciaAction, editCompetencia as editCompetenciaAction } from '../slices/tablaCompetenciaEspecificasSlice';
 import { useNavigate } from "react-router-dom";
+import ConfirmationDialog from '../views/ConfirmationDialog';
 
 const TablaCompetenciaEspecificas = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,10 @@ const TablaCompetenciaEspecificas = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filters, setFilters] = useState({ tipo: 'E', departamentoId: '', institucionId: '', planId: '' });
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
+  const [dialogTitle, setDialogTitle] = useState('');
+  const [confirmAction, setConfirmAction] = useState(null);
 
   useEffect(() => {
     fetchCompetenciasEspecificas()
@@ -38,9 +43,25 @@ const TablaCompetenciaEspecificas = () => {
   };
 
   const handleDelete = (id) => {
-    deleteCompetencia(id)
-      .then(() => dispatch(deleteCompetenciaAction(id)))
-      .catch(console.error);
+    setDialogTitle('Eliminar Competencia');
+    setDialogMessage('¿Está seguro de que desea eliminar esta competencia?');
+    setConfirmAction(() => () => {
+      deleteCompetencia(id)
+        .then(() => dispatch(deleteCompetenciaAction(id)))
+        .catch(console.error);
+    });
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleConfirmDialog = () => {
+    if (confirmAction) {
+      confirmAction();
+    }
+    setOpenDialog(false);
   };
 
   const handleEdit = (id) => {
@@ -130,15 +151,15 @@ const TablaCompetenciaEspecificas = () => {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6} sx={{ p: 0 }}>
-            <Button variant="contained" color="primary" onClick={applyFilters} fullWidth>
-              Aplicar Filtros
-            </Button>
-          </Grid>
-          <Grid item xs={12} sm={6} sx={{ p: 0 }}>
-            <Button variant="contained" color="secondary" onClick={clearFilters} fullWidth>
-              Limpiar Filtros
-            </Button>
-          </Grid>
+              <Button variant="contained" color="primary" onClick={applyFilters} fullWidth>
+                Aplicar Filtros
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={6} sx={{ p: 0 }}>
+              <Button variant="contained" color="secondary" onClick={clearFilters} fullWidth>
+                Limpiar Filtros
+              </Button>
+            </Grid>
           </Grid>
         </div>
         <TableContainer component={Paper} className="container-table-child">
@@ -210,6 +231,13 @@ const TablaCompetenciaEspecificas = () => {
           />
         </TableContainer>
       </Container>
+      <ConfirmationDialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        onConfirm={handleConfirmDialog}
+        title={dialogTitle}
+        message={dialogMessage}
+      />
     </ThemeProvider>
   );
 };

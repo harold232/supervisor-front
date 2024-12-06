@@ -13,7 +13,7 @@ const ConfirmationDialog = ({ open, onClose, onConfirm, title, message }) => {
           Cancelar
         </Button>
         <Button onClick={onConfirm} color="primary" autoFocus>
-          Confirmar
+          Aceptar
         </Button>
       </DialogActions>
     </Dialog>
