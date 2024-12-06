@@ -9,6 +9,7 @@ import EditCompetenciaE from "../pages/EditCompetenciaE.jsx";
 import EditCompetenciaG from "../pages/EditCompetenciaG.jsx";
 import ImportarCompetencia from '../pages/ImportarCompetencia';
 import { AppBar, Toolbar, Typography } from '@mui/material';
+import UploadExcel from '../views/UploadExcel.jsx';
 
 const AppRouter = () => {
 
@@ -33,6 +34,7 @@ const AppRouter = () => {
                         <Route path="/editar-competencia-especifica/:id" element={<EditCompetenciaE />} />
                         <Route path="/editar-competencia-general/:id" element={<EditCompetenciaG />} />
                         <Route path="/importar-competencia" element={<ImportarCompetencia />} />
+                        <Route path="/plan-de-estudios" element={<UploadExcel />} />
                     </Routes>
                 </div>
             </div>

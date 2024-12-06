@@ -1,0 +1,48 @@
+:root {
+    --color-texto: #0d0f16;
+    --color-fondo: #eff1f6;
+    --color-primario: #205274;
+    --color-secundario: #71384d;
+    --color-acento: #af695c;
+  }
+
+.upload-excel-header {
+    background-color: var(--color-fondo);
+    padding: 20px;
+  }
+  
+  .upload-excel-header h2 {
+    color: var(--color-primario);
+  }
+  
+  .upload-excel-form {
+    margin-top: 20px;
+  }
+  
+  .upload-excel-form input[type="file"] {
+    padding: 10px;
+    border: 2px solid var(--color-acento);
+    background-color: white;
+    color: var(--color-texto);
+  }
+  
+  .upload-excel-form input[type="file"]::file-selector-button {
+    background-color: var(--color-secundario);
+    color: white;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .upload-excel-form button {
+    background-color: var(--color-primario);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .upload-excel-form button:hover {
+    background-color: var(--color-secundario);
+  }
